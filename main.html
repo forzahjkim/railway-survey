@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>철도역 이용 경험 조사</title>
+<meta property="og:title" content="철도역 이용 경험 조사">
+<meta property="og:description" content="한국철도공사(코레일) 역 이용 경험 설문조사 · 약 5분 · 응답 완료 시 메가커피 아메리카노 모바일 쿠폰">
+<meta property="og:type" content="website">
+<meta name="description" content="한국철도공사(코레일) 역 이용 경험 설문조사 · 약 5분 · 응답 완료 시 메가커피 아메리카노 모바일 쿠폰">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+:root{
+  --primary:#005BAC; --secondary:#2E7ABF; --card:#EFF5FB; --cell:#DCEAF7;
+  --hair:#CFE0EE; --ink:#3B3B3E; --muted:#77777A; --cyan:#00B2E3;
+  --bg:#F4F7FA; --white:#FFFFFF; --alert:#B3261E;
+}
+html{font-size:17px}
+html.big{font-size:21px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Pretendard,"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  background:var(--bg); color:var(--ink); line-height:1.55;
+  -webkit-text-size-adjust:100%;
+}
+#app{max-width:520px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;background:var(--bg)}
+/* ---------- fixed header ---------- */
+header{position:sticky;top:0;z-index:10;background:var(--white);border-bottom:1px solid var(--hair)}
+.hd-top{display:flex;align-items:center;justify-content:space-between;padding:.6rem .9rem .45rem}
+.hd-title{font-size:.92rem;font-weight:700;color:var(--primary);letter-spacing:-.01em}
+.font-btn{border:1.5px solid var(--hair);background:var(--white);color:var(--ink);border-radius:8px;
+  padding:.25rem .55rem;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit}
+.font-btn.on{background:var(--primary);border-color:var(--primary);color:#fff}
+.station-banner{background:var(--card);color:var(--primary);font-size:.85rem;font-weight:500;
+  text-align:center;padding:.4rem .9rem;border-top:1px solid var(--hair)}
+.station-banner b{font-weight:700}
+.pbar{height:5px;background:var(--hair)}
+.pbar>i{display:block;height:100%;background:var(--primary);width:0%;transition:width .25s ease}
+@media (prefers-reduced-motion:reduce){.pbar>i{transition:none}}
+.pnum{font-size:.72rem;color:var(--muted);text-align:right;padding:.15rem .9rem .3rem;background:var(--white)}
+/* ---------- content ---------- */
+main{flex:1;padding:1.1rem .95rem 7.5rem}
+.qno{display:inline-block;background:var(--primary);color:#fff;font-size:.78rem;font-weight:700;
+  border-radius:999px;padding:.14rem .7rem;margin-bottom:.55rem;letter-spacing:.02em}
+.qtitle{font-size:1.22rem;font-weight:700;letter-spacing:-.015em;margin-bottom:.35rem;text-wrap:balance;word-break:keep-all}
+.qsub{font-size:.92rem;color:var(--muted);margin-bottom:.9rem}
+.req{color:var(--secondary);font-weight:700}
+/* option cards */
+.opt{display:flex;align-items:flex-start;gap:.65rem;width:100%;text-align:left;background:var(--white);
+  border:1.5px solid var(--hair);border-radius:12px;padding:.85rem .9rem;margin-bottom:.55rem;
+  font-size:1.06rem;font-family:inherit;color:var(--ink);cursor:pointer;min-height:3.4rem;line-height:1.5}
+.opt .dot{flex:0 0 auto;width:1.25rem;height:1.25rem;border-radius:50%;border:2px solid var(--hair);
+  margin-top:.12rem;position:relative;background:var(--white)}
+.opt.multi .dot{border-radius:6px}
+.opt.sel{border-color:var(--primary);background:var(--cell);font-weight:700}
+.opt.sel .dot{border-color:var(--primary);background:var(--primary)}
+.opt.sel .dot::after{content:"";position:absolute;left:.3rem;top:.09rem;width:.3rem;height:.6rem;
+  border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+.opt:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+/* likert item */
+.lk{background:var(--white);border:1.5px solid var(--hair);border-radius:12px;padding:.9rem .9rem .75rem;margin-bottom:.7rem}
+.lk-q{font-size:1rem;font-weight:500;margin-bottom:.7rem;line-height:1.5}
+.lk-row{display:flex;gap:.3rem}
+.lk-row button{flex:1;min-height:4.1rem;border:1.5px solid var(--hair);background:var(--white);
+  border-radius:9px;font-family:inherit;font-size:.8rem;line-height:1.25;color:var(--muted);
+  cursor:pointer;padding:.3rem .1rem;word-break:keep-all}
+.lk-row button b{display:block;font-size:1rem;color:var(--ink);font-weight:700;margin-bottom:.12rem}
+.lk-row button.sel{background:var(--primary);border-color:var(--primary);color:#EAF3FB}
+.lk-row button.sel b{color:#fff}
+.lk-row button:focus-visible{outline:3px solid var(--cyan);outline-offset:1px}
+.lk-picked{font-size:.92rem;color:var(--primary);font-weight:700;margin-top:.5rem;min-height:1.2rem}
+/* info screens */
+.card{background:var(--white);border:1.5px solid var(--hair);border-radius:14px;padding:1.15rem 1rem;margin-bottom:.8rem}
+.card p{margin-bottom:.6rem;font-size:.98rem}
+.card p:last-child{margin-bottom:0}
+.intro-hero{background:var(--white);border:1.5px solid var(--hair);border-radius:14px;overflow:hidden;margin-bottom:.8rem}
+.intro-bar{height:6px;background:var(--cyan)}
+.intro-body{padding:1.3rem 1.1rem 1.2rem}
+.intro-body h1{font-size:1.45rem;font-weight:700;color:var(--primary);letter-spacing:-.02em;margin-bottom:.3rem;text-wrap:balance}
+.intro-body .sub{font-size:.9rem;color:var(--muted)}
+.notice{background:var(--card);border-radius:10px;padding:.8rem .9rem;font-size:.9rem;margin-top:.9rem}
+.notice p{margin-bottom:.4rem}.notice p:last-child{margin-bottom:0}
+.pilot-note{font-size:.8rem;color:var(--muted);margin-top:1rem;line-height:1.6}
+.admin-link{display:block;margin:1.6rem auto 0;background:none;border:none;color:#A9B4BE;font-size:.76rem;
+  text-decoration:underline;cursor:pointer;font-family:inherit}
+/* phone */
+.phone-row{display:flex;align-items:center;gap:.45rem;background:var(--white);border:1.5px solid var(--hair);
+  border-radius:12px;padding:.9rem}
+.phone-row span{font-size:1.1rem;font-weight:700}
+.phone-row input{width:6.2rem;font-size:1.15rem;font-family:inherit;text-align:center;border:none;
+  border-bottom:2px solid var(--hair);padding:.25rem 0;background:transparent;color:var(--ink);border-radius:0}
+.phone-row input:focus{outline:none;border-bottom-color:var(--primary)}
+/* error */
+.err{display:none;align-items:center;gap:.4rem;color:var(--alert);font-size:.88rem;font-weight:700;margin:.3rem 0 .2rem}
+.err.show{display:flex}
+/* feedback */
+.fb-box{margin-top:1.3rem;border-top:1px dashed var(--hair);padding-top:.8rem}
+.fb-toggle{background:none;border:none;color:var(--muted);font-size:.82rem;cursor:pointer;
+  font-family:inherit;text-decoration:underline;padding:.2rem 0}
+.fb-area{display:none;margin-top:.5rem}
+.fb-area.open{display:block}
+.fb-guide{font-size:.78rem;color:#98A2AB;margin-bottom:.4rem;line-height:1.55}
+.fb-area textarea{width:100%;min-height:4.5rem;border:1.5px solid var(--hair);border-radius:10px;
+  padding:.6rem .7rem;font-family:inherit;font-size:.92rem;color:var(--ink);background:var(--white);resize:vertical}
+.fb-area textarea:focus{outline:none;border-color:var(--secondary)}
+.fb-saved{font-size:.75rem;color:var(--secondary);margin-top:.25rem;min-height:1rem}
+/* footer nav */
+.navbar{position:fixed;bottom:0;left:0;right:0;z-index:10;background:var(--white);
+  border-top:1px solid var(--hair);padding:.7rem .95rem calc(.7rem + env(safe-area-inset-bottom))}
+.nav-in{max-width:520px;margin:0 auto;display:flex;gap:.6rem}
+.btn{flex:1;min-height:3.5rem;border-radius:12px;font-size:1.15rem;font-weight:700;font-family:inherit;cursor:pointer;border:none}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:active{background:#004a8d}
+.btn-ghost{flex:0 0 30%;background:var(--white);color:var(--muted);border:1.5px solid var(--hair)}
+.btn:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+/* done / screenout */
+.done-icon{width:3.4rem;height:3.4rem;border-radius:50%;background:var(--primary);margin:0 auto 1rem;position:relative}
+.done-icon::after{content:"";position:absolute;left:1.15rem;top:.78rem;width:.75rem;height:1.4rem;
+  border:solid #fff;border-width:0 4px 4px 0;transform:rotate(45deg)}
+.center{text-align:center}
+.save-status{font-size:.85rem;margin-top:.8rem;color:var(--muted)}
+.copy-fallback{margin-top:1rem;text-align:left}
+.copy-fallback textarea{width:100%;min-height:5rem;font-size:.72rem;border:1.5px solid var(--hair);
+  border-radius:10px;padding:.5rem;font-family:monospace;background:var(--white);color:var(--ink)}
+.mini-btn{background:var(--card);border:1.5px solid var(--hair);color:var(--primary);font-weight:700;
+  border-radius:9px;padding:.5rem .9rem;font-size:.88rem;cursor:pointer;font-family:inherit;margin:.35rem .35rem .35rem 0}
+/* 안내 카드 — 체크 아이콘 + 블루 강조 */
+.guide-card{background:var(--white);border:1.5px solid var(--hair);border-radius:14px;
+  padding:1.15rem 1.05rem 1.1rem;margin-bottom:.8rem;box-shadow:0 1px 3px rgba(0,91,172,.06)}
+.guide-head{font-size:1.14rem;font-weight:500;color:var(--ink);margin-bottom:.95rem;
+  padding-bottom:.8rem;border-bottom:2px solid var(--cell);word-break:keep-all}
+.guide-head b{color:var(--primary);font-weight:700}
+.checklist{list-style:none;display:flex;flex-direction:column;gap:.85rem}
+.checklist li{position:relative;padding-left:2rem;font-size:1rem;line-height:1.6;word-break:keep-all}
+.checklist li::before{content:"";position:absolute;left:0;top:.08rem;width:1.4rem;height:1.4rem;
+  border-radius:50%;background:var(--primary)}
+.checklist li::after{content:"";position:absolute;left:.5rem;top:.36rem;width:.34rem;height:.68rem;
+  border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+.checklist b{color:var(--primary);font-weight:700}
+/* 중점 문항 이해도 확인 블록 */
+.deep-q{font-size:.98rem;font-weight:700;color:var(--iv-ink);margin:.15rem 0 .6rem;line-height:1.55;word-break:keep-all}
+.deep-opts{display:flex;flex-direction:column;gap:.4rem}
+.deep-opt{display:flex;align-items:flex-start;gap:.55rem;width:100%;text-align:left;
+  background:#fff;border:1.5px solid var(--iv-line);border-radius:10px;padding:.65rem .7rem;
+  font-family:inherit;font-size:.97rem;line-height:1.45;color:var(--ink);cursor:pointer;min-height:2.9rem}
+.deep-opt .dot{flex:0 0 auto;width:1.1rem;height:1.1rem;border-radius:50%;
+  border:2px solid var(--iv-line);margin-top:.15rem;position:relative;background:#fff}
+.deep-opt.sel{border-color:var(--iv-accent);background:#FDF8EC;font-weight:700}
+.deep-opt.sel .dot{border-color:var(--iv-accent);background:var(--iv-accent)}
+.deep-opt.sel .dot::after{content:"";position:absolute;left:.26rem;top:.06rem;width:.26rem;height:.54rem;
+  border:solid #fff;border-width:0 2.2px 2.2px 0;transform:rotate(45deg)}
+.deep-opt:focus-visible{outline:3px solid var(--iv-accent);outline-offset:2px}
+.deep-more{background:none;border:none;color:var(--iv-ink);font-family:inherit;font-size:.85rem;
+  text-decoration:underline;cursor:pointer;padding:.5rem 0 .1rem}
+.deep-note{display:none;margin-top:.2rem}
+.deep-note.open{display:block}
+/* interviewer recording zone */
+:root{--iv-bg:#FBF5E3; --iv-line:#E2D2A4; --iv-ink:#6E5B1E; --iv-accent:#A8842B}
+.iv{background:var(--iv-bg);border:1.5px dashed var(--iv-line);border-radius:12px;
+  padding:.8rem .85rem;margin-top:1.3rem}
+.iv-head{display:flex;align-items:center;gap:.4rem;font-size:.82rem;font-weight:700;
+  color:var(--iv-ink);margin-bottom:.6rem;letter-spacing:.02em}
+.iv-head .tag{background:var(--iv-accent);color:#fff;border-radius:6px;padding:.05rem .45rem;font-size:.68rem}
+.iv-label{font-size:.8rem;font-weight:700;color:var(--iv-ink);margin:.55rem 0 .3rem}
+.und-row{display:flex;gap:.4rem}
+.und-row button{flex:1;min-height:2.7rem;border-radius:9px;border:1.5px solid var(--iv-line);
+  background:#fff;font-family:inherit;font-size:.9rem;font-weight:700;color:var(--iv-ink);cursor:pointer}
+.und-row button.sel{background:var(--primary);border-color:var(--primary);color:#fff}
+.iv input[type=text],.iv textarea{width:100%;border:1.5px solid var(--iv-line);border-radius:9px;
+  padding:.5rem .6rem;font-family:inherit;font-size:.9rem;background:#fff;color:var(--ink)}
+.iv textarea{min-height:3.6rem;resize:vertical}
+.iv input:focus,.iv textarea:focus{outline:none;border-color:var(--iv-accent)}
+.deep{background:#fff;border:1.5px solid var(--iv-line);border-radius:10px;padding:.7rem .75rem;margin-top:.7rem}
+.deep-title{font-size:.85rem;font-weight:700;color:var(--iv-ink);margin-bottom:.25rem}
+.deep-why{font-size:.75rem;color:var(--muted);margin-bottom:.5rem;line-height:1.5}
+.mis-row{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.45rem}
+.mis-row button{border:1.5px solid var(--iv-line);background:#fff;border-radius:999px;
+  padding:.3rem .65rem;font-size:.76rem;font-family:inherit;color:var(--iv-ink);cursor:pointer}
+.mis-row button.sel{background:var(--iv-accent);border-color:var(--iv-accent);color:#fff;font-weight:700}
+.chip-grid{display:flex;flex-wrap:wrap;gap:.4rem}
+.chip-grid button{border:1.5px solid var(--hair);background:var(--white);border-radius:999px;
+  padding:.5rem .8rem;font-size:.9rem;font-family:inherit;color:var(--ink);cursor:pointer;min-height:2.6rem}
+.chip-grid button.sel{background:var(--cell);border-color:var(--primary);color:var(--primary);font-weight:700}
+.form-row{margin-bottom:.9rem}
+.form-row>label{display:block;font-size:.85rem;font-weight:700;color:var(--primary);margin-bottom:.35rem}
+.form-row input[type=text]{width:100%;border:1.5px solid var(--hair);border-radius:10px;
+  padding:.65rem .7rem;font-family:inherit;font-size:1rem;background:var(--white);color:var(--ink)}
+.form-row input[type=text]:focus{outline:none;border-color:var(--primary)}
+.mode-chip{background:var(--iv-accent);color:#fff;font-size:.66rem;font-weight:700;border-radius:6px;
+  padding:.1rem .4rem;margin-left:.35rem;vertical-align:middle}
+/* admin */
+#adminView{display:none}
+.ad-stat{display:flex;gap:.5rem;margin-bottom:.8rem;flex-wrap:wrap}
+.ad-stat .tile{flex:1 1 28%;background:var(--white);border:1.5px solid var(--hair);border-radius:12px;padding:.7rem .8rem}
+.ad-stat .tile b{display:block;font-size:1.4rem;color:var(--primary);font-variant-numeric:tabular-nums}
+.ad-stat .tile span{font-size:.75rem;color:var(--muted)}
+.ad-sec{font-size:1rem;font-weight:700;color:var(--primary);margin:1.2rem 0 .5rem}
+.fb-item{background:var(--white);border:1.5px solid var(--hair);border-radius:10px;padding:.6rem .8rem;margin-bottom:.5rem;font-size:.88rem}
+.fb-item .who{font-size:.72rem;color:var(--muted);margin-bottom:.15rem}
+.badge-focus.bad{background:#FBE9E7;color:var(--alert)}
+.badge-focus{display:inline-block;background:var(--cell);color:var(--primary);font-size:.68rem;font-weight:700;
+  border-radius:6px;padding:.05rem .4rem;margin-left:.3rem;vertical-align:middle}
+.ad-table-wrap{overflow-x:auto;background:var(--white);border:1.5px solid var(--hair);border-radius:12px}
+table{border-collapse:collapse;font-size:.75rem;min-width:900px}
+th,td{border-bottom:1px solid var(--hair);padding:.35rem .5rem;text-align:center;white-space:nowrap;font-variant-numeric:tabular-nums}
+th{background:var(--card);color:var(--primary);font-weight:700;position:sticky;top:0}
+.muted{color:var(--muted)}
+/* ===== V2 추가 컴포넌트 ===== */
+.sec-label{display:inline-block;font-size:.74rem;font-weight:700;color:var(--muted);letter-spacing:.02em;
+  border:1px solid var(--hair);border-radius:6px;padding:.1rem .5rem;margin-bottom:.5rem;background:var(--white)}
+.org-row{display:flex;gap:.6rem;margin-top:.9rem;flex-wrap:wrap}
+.org-row>div{flex:1 1 45%;background:var(--card);border-radius:10px;padding:.55rem .7rem;font-size:.85rem;line-height:1.45}
+.org-row span{display:block;font-size:.72rem;color:var(--muted)}
+.org-row b{color:var(--primary);word-break:keep-all}
+details.law{margin-top:.8rem;font-size:.8rem;color:var(--muted);line-height:1.5}
+details.law summary{cursor:pointer;color:var(--primary);font-weight:700;font-size:.82rem}
+details.law p{margin-top:.35rem}
+.chip-grid.sido button{flex:1 1 30%;min-height:3rem;border-radius:12px;font-size:1rem}
+.chip-grid.sido button:last-child{flex:1 1 100%}
+.reward-form{background:var(--white);border:1.5px solid var(--hair);border-radius:14px;padding:1rem .95rem .6rem}
+.reward-form.off .form-row{opacity:.4}
+.reward-form .phone-row{border:none;padding:.2rem 0}
+.chk-row{display:flex;align-items:flex-start;gap:.6rem;padding:.7rem .2rem .4rem;border-top:1px dashed var(--hair);
+  margin-top:.4rem;font-size:1rem;cursor:pointer;line-height:1.45}
+.chk-row input{width:1.35rem;height:1.35rem;margin-top:.1rem;accent-color:var(--primary);flex:0 0 auto}
+.chk-row small{color:var(--muted);font-size:.85rem}
+.modal-bg{position:fixed;inset:0;background:rgba(20,40,70,.45);z-index:50;display:flex;align-items:center;justify-content:center;padding:1rem}
+.modal-bg[hidden]{display:none}
+.modal{background:var(--white);border-radius:16px;padding:1.3rem 1.1rem 1rem;width:100%;max-width:400px;box-shadow:0 8px 30px rgba(0,0,0,.2)}
+.modal-title{font-size:1.15rem;font-weight:700;color:var(--primary);text-align:center;margin-bottom:.7rem}
+.modal-phone{font-size:1.6rem;font-weight:700;text-align:center;letter-spacing:.04em;color:var(--ink);margin:.3rem 0 .5rem;font-variant-numeric:tabular-nums}
+.modal-btns{display:flex;gap:.6rem;margin-top:1rem}
+.modal-btns .btn{min-height:3.1rem;font-size:1.05rem}
+.modal-btns .btn-ghost{flex:1}
+input:disabled{background:#F1F4F7 !important;color:#9AA5B0}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="hd-top">
+      <div class="hd-title">철도역 이용 경험 조사<span class="mode-chip" id="modeChip" hidden>사전 테스트</span></div>
+      <button class="font-btn" id="fontBtn" aria-pressed="false" onclick="toggleFont()">가 크게</button>
+    </div>
+    <div class="station-banner" id="stBanner" hidden></div>
+    <div class="pbar" aria-hidden="true"><i id="pfill"></i></div>
+    <div class="pnum" id="pnum"></div>
+  </header>
+  <main id="main" aria-live="polite"></main>
+  <div class="navbar" id="navbar">
+    <div class="nav-in">
+      <button class="btn btn-ghost" id="btnPrev" onclick="goPrev()">이전</button>
+      <button class="btn btn-primary" id="btnNext" onclick="goNext()">다음</button>
+    </div>
+  </div>
+  <div class="modal-bg" id="modalBg" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-btns" id="modalBtns"></div>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script>
+/* =====================================================================
+   철도역 이용 경험 조사 — 모바일 프로토타입 V2 (설문지 「김형중 수정 V2」 9/4 + 9/4 확정안)
+   MODE 'A' = 본조사 동일판 / 'B' = 사전 테스트판(이해도 점검 내장)
+   응답 전송: Google Apps Script 웹앱 (config.js의 SURVEY_ENDPOINT)
+   ===================================================================== */
+var MODE = 'A';
+var BUILD = 'V2-1';
+var IS_B = (MODE === 'B');
+var STATION = IS_B ? 'A역' : '해남역';
+var USE_DATE = IS_B ? '최근' : '8월 20일';           /* [#DATA#] 자리 — 본조사에서는 실제 이용일이 들어감 */
+var ENDPOINT = (typeof SURVEY_ENDPOINT === 'string' && /^https:\/\//.test(SURVEY_ENDPOINT)) ? SURVEY_ENDPOINT : '';
+
+var LIK  = ['전혀 아니다','아니다','보통','그렇다','매우 그렇다'];
+var EASY_S = ['매우 어려움','어려운 편','보통','쉬운 편','매우 쉬움'];
+var EASY_F = ['매우 어렵다','어려운 편이다','보통이다','쉬운 편이다','매우 쉽다'];
+var SAT_S  = ['매우 불만족','불만족','보통','만족','매우 만족'];
+var SAT_F  = ['매우 불만족','불만족','보통','만족','매우 만족'];
+var INT_S  = ['전혀 의향 없음','의향 없는 편','보통','의향 있는 편','매우 의향 있음'];
+var INT_F  = ['전혀 의향 없다','의향 없는 편이다','보통이다','의향 있는 편이다','매우 의향 있다'];
+var SIDO = ['서울','부산','대구','인천','대전','울산','세종','경기','강원','충북','충남','전북','경북','경남','제주','전남광주통합특별시(구 광주·전남)'];
+
+var ACCESS_TS = new Date().toISOString();
+var T0 = Date.now();
+var RESP_ID = (IS_B?'b':'a') + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+
+function ST(){return '<b>'+STATION+'</b>';}
+function DS(){return USE_DATE==='최근' ? '최근' : USE_DATE+'에';}
+
+/* ===== screens (V2 순서: 업체안 + SQ5·SQ6 말미 이동) ===== */
+var SCREENS = [];
+function rebuildScreens(){
+  SCREENS = [];
+  if(IS_B){
+    SCREENS.push({id:'ivinfo', type:'ivinfo'});
+    SCREENS.push({id:'ivguide', type:'info', html:
+      '<div class="guide-card">'+
+      '<div class="guide-head">이 조사는 <b>「사전 테스트 조사」</b>입니다</div>'+
+      '<ul class="checklist">'+
+      '<li>본조사를 시작하기 전에, <b>질문이 잘 이해되는지</b>를 먼저 확인하는 조사입니다.</li>'+
+      '<li>각 질문에 답하신 뒤, 그 아래 <b>노란 칸</b>에서 「질문이 한 번에 이해되셨는지」를 한 번 더 여쭙습니다.</li>'+
+      '<li>헷갈리거나 어색한 부분이 있으면 <b>솔직하게</b> 알려 주세요. 지적해 주시는 내용이 많을수록 연구에 큰 도움이 됩니다. <b>정답은 없습니다.</b></li>'+
+      '<li>설문 문항에는 <b>역 이름</b>이 들어갑니다. 실제로 어느 역인지보다, <b>그런 상황을 떠올렸을 때 질문이 이해되는지</b>가 이 조사에서 보려는 것입니다.</li>'+
+      '<li>응답은 자동으로 저장됩니다. 소요시간은 <b>약 5~10분</b>입니다.</li>'+
+      '</ul></div>'});
+  }
+  SCREENS.push({id:'intro', type:'intro'});
+  /* ---- 스크리닝 ---- */
+  SCREENS.push({id:'sq1', type:'single', no:'SQ1', focus:true,
+    title:'귀하께서는 '+DS()+' '+ST()+'에서 열차를 이용하신 경험이 있으신가요?',
+    opts:['있다','이용한 것 같으나 시점이 기억나지 않는다','예매만 대신해 주었고, 나는 이 역에 가지 않았다','이용한 적 없다']});
+  SCREENS.push({id:'sq2', type:'single', no:'SQ2',
+    title:'귀하께서는 최근 이용하신 '+ST()+'은 다음 중 어디에 해당되나요?',
+    opts:['출발역으로 이용 ('+STATION+'에서 열차를 탔다)','도착역으로 이용 ('+STATION+'에서 열차에서 내렸다)','둘 다 이용 ('+STATION+'에서 타기도 하고 내리기도 했다)']});
+  SCREENS.push({id:'sq3', type:'single', no:'SQ3', title:'귀하의 성별은 무엇인가요?', opts:['남성','여성','응답 거절']});
+  SCREENS.push({id:'sq4', type:'single', no:'SQ4', title:'귀하의 연령대는 어떻게 되십니까?', sub:'만 나이 기준으로 답해 주세요.',
+    opts:['만 19~29세','30대','40대','50대','60~64세','65~69세','70대 이상']});
+  SCREENS.push({id:'sq7', type:'multi', no:'SQ7', focus:true, exclusive:6,
+    title:'다음 중 귀하께서 해당되는 것을 모두 선택해 주세요.', sub:'여러 개 선택할 수 있습니다. 해당되는 것이 없으면 마지막 항목을 눌러 주세요.',
+    opts:['만 65세 이상(경로우대 할인 대상자)','몸이 불편하여 역을 이용할 때 도움이 필요함','임산부','영유아·어린이를 데리고 이용함','중증 장애인','경증 장애인','이 중 해당되는 항목 없음'],
+    hideOpt:function(a,i){ return i===2 && a.sq3===1; }   /* SQ3=① 남성 → ③ 임산부 미제시 */
+  });
+  SCREENS.push({id:'sq8', type:'single', no:'SQ8', title:'귀하께서는 평소 열차(KTX·ITX·무궁화호 등)를 얼마나 자주 이용하시나요?',
+    opts:['주 1회 이상','한 달에 1~3회','1년에 4~11회 (두세 달에 한 번 정도)','1년에 1~3회','거의 이용하지 않음']});
+  SCREENS.push({id:'sq9', type:'single', no:'SQ9',
+    title:'귀하께서는 '+DS()+' '+ST()+'에서 열차를 이용하신 목적은 무엇인가요?', sub:'가장 중요한 목적 하나를 선택해 주세요.',
+    opts:['출퇴근·통학','업무·출장','여가·관광','가족·지인 방문','병원 진료·병문안','관공서·은행 등 행정업무','쇼핑·장보기','기타']});
+  /* ---- A. 코레일톡 앱 이용 및 승차권 구입 방식 ---- */
+  SCREENS.push({id:'a1', type:'likert', no:'A1', sec:'코레일톡 앱 이용 및 승차권 구입 방식', focus:true,
+    title:'귀하께서는 평소 코레일앱(코레일톡·코레일+)으로 승차권을 예매·결제하는 것이 얼마나 쉽다고 생각하시나요?',
+    items:[['A1','코레일앱으로 승차권을 예매·결제하는 것은']], anchors:EASY_S, anchorsFull:EASY_F});
+  SCREENS.push({id:'a2', type:'single', no:'A2', cond:function(a){return a.sq2===1||a.sq2===3;},
+    title:'귀하께서 '+DS()+' '+ST()+'에서 이용하신 열차 승차권은 어떤 방법으로 준비하셨나요?',
+    opts:['코레일톡·코레일+ 등 모바일 앱으로 예매','코레일 홈페이지로 예매','역에 있는 자동발매기에서 구입','역 매표창구에서 직원에게 구입','열차 안에서 승무원에게 구입','정기승차권·내일로 등 이미 보유하고 있던 승차권(패스) 이용','잘 기억나지 않음']});
+  SCREENS.push({id:'a3', type:'single', no:'A3', focus:true, title:'귀하께서는 '+ST()+'을 얼마나 자주 이용하시나요?',
+    opts:['주 1회 이상','한 달에 1~3회','1년에 4~11회 (두세 달에 한 번 정도)','1년에 1~3회','이번에 처음 이용함']});
+  /* ---- B. 역 이용 평가 ---- */
+  var b1t='귀하께서 '+DS()+' '+ST()+'을 이용하셨을 때 느끼신 경험에 대해 평가해 주세요.';
+  SCREENS.push({id:'b1a', type:'likert', no:'B1', page:'1/3', sec:'역 이용 평가', title:b1t,
+    items:[['BA1','이 역에 머무는 동안 안전하다고 느꼈다'],
+           ['BA2','이 역에서 승차권 구입이나 확인에 문제가 생기면 어떻게 해야 할지 몰라 걱정되었다'],
+           ['BA3','이 역에서는 승차권 확인이나 타는 곳·나가는 곳 찾기 등 필요한 일을 내가 스스로 처리할 수 있었다']]});
+  SCREENS.push({id:'b1b', type:'likert', no:'B1', page:'2/3', title:b1t,
+    items:[['BB1','이 역에서 몸이 아프거나 위험한 일이 생겨도 빠르게 도움을 받을 수 있을 것 같다'],
+           ['BB2','이 역의 타는 곳이나 열차 시간을 잘못 알고 있을까 봐 걱정되었다'],
+           ['BB3','이 역에서는 이용하는 동안 다음에 무엇을 해야 할지 미리 알 수 있었다']]});
+  SCREENS.push({id:'b1c', type:'likert', no:'B1', page:'3/3', focus:true, title:b1t,
+    items:[['BC1','이 역은 전반적으로 안심하고 이용할 수 있는 곳이라고 느꼈다'],
+           ['BC2','이 역을 이용하는 동안 뭔가 잘못될까 봐 긴장되었다'],
+           ['BC3','열차 지연 같은 예상 밖의 일이 생겨도 이 역에서 해결할 방법이 있다고 느꼈다']]});
+  SCREENS.push({id:'trans', type:'info', html:
+    '<div class="card"><p style="font-weight:700;color:var(--primary)">여기까지 답해 주셔서 감사합니다.</p>'+
+    '<p>지금부터 <b>'+STATION+'</b>에 대해 몇 가지 더 여쭙겠습니다. 정답은 없으니 편하게 답해 주세요.</p></div>'});
+  SCREENS.push({id:'b2', type:'likert', no:'B2', title:'귀하께서 앞으로 '+ST()+'을 이용하시는 것에 대해 어떻게 생각하시는지 답해 주세요.',
+    items:[['BD1','이 역은 이용방법이 복잡하거나 불편할 것 같아 되도록 이용하지 않으려 한다'],
+           ['BD2','다음에도 이 역을 이용할 일이 생기면, 열차 대신 다른 교통수단(자가용·버스 등)을 알아볼 것 같다']]});
+  SCREENS.push({id:'b3', type:'likert', no:'B3', focus:true, title:'귀하께서 '+ST()+'을 이용하셨을 때 다음의 항목에 대해 어떻게 생각하셨나요?',
+    items:[['BE1','이 역에서는 도움이 필요할 때 어디로 연락하면 되는지 알 수 있도록 안내(안내표지·안내방송 등)가 잘 되어 있었다'],
+           ['BE2','이 역에서는 도움이 필요할 때 도움을 요청하기 어렵다고 느꼈다']]});
+  SCREENS.push({id:'b4', type:'single', no:'B4', title:'귀하께서 '+ST()+'을 이용하셨을 때 도움이 필요했던 적이 있나요? 있었다면 도움을 받으셨나요?',
+    opts:['도움이 필요했지만, 받지 못했다','도움이 필요했고, 도움을 받았다','도움이 필요했던 적이 없다']});
+  SCREENS.push({id:'b5', type:'likert', no:'B5', title:'귀하께서는 이용하신 '+ST()+'에 전반적으로 얼마나 만족하시나요?',
+    items:[['B5','이용하신 '+STATION+'에 대한 전반적인 만족도']], anchors:SAT_S, anchorsFull:SAT_F});
+  SCREENS.push({id:'b6', type:'likert', no:'B6', focus:true, title:'귀하께서는 이후에도 지속적으로 '+ST()+'을 이용하실 의향이 있으신가요?',
+    items:[['B6','앞으로도 '+STATION+'을 계속 이용할 의향']], anchors:INT_S, anchorsFull:INT_F});
+  SCREENS.push({id:'b7a', type:'single', no:'B7-1', title:'귀하께서 '+ST()+'을 이용하실 때 역무원(승차권·안내·문의를 도와주는 직원)을 보셨나요?',
+    opts:['보았다','보지 못했다','잘 모르겠다']});
+  SCREENS.push({id:'b7b', type:'single', no:'B7-2', focus:true, title:'귀하께서 '+ST()+'을 이용하실 때 청소·시설점검 등을 하는 직원을 보셨나요?',
+    opts:['보았다','보지 못했다','잘 모르겠다']});
+  SCREENS.push({id:'b8', type:'multi', no:'B8', focus:true, max:2, exclusive:7,
+    title:'귀하께서 생각하시기에 '+ST()+'에서 이용하기 불편하거나, 더 개선되었으면 하는 점은 무엇인가요?',
+    sub:'가장 개선이 필요한 사항을 최대 2개까지 선택해 주세요. 이미 있더라도, 더 잘 보이거나 쓰기 쉬워지면 좋겠다고 생각하시는 것을 편하게 응답해 주세요.',
+    opts:['직원과 연결되는 인터폰·비상벨이 더 눈에 띄고 쓰기 쉬워지는 것','승차권을 사거나 바꾸는 기기가 더 쓰기 쉬워지는 것','큰 글씨·음성 안내, 전광판 등 이용 안내가 더 알기 쉬워지는 것','역 안 조명이 더 밝고, CCTV가 눈에 잘 띄는 것','비상·응급 상황에서 도움을 더 빨리 받을 수 있는 것','열차 시간에 맞춰 직원이 나와 도와주는 것','대기공간·화장실 등 역사 내 편의시설이 더 잘 갖춰지는 것','지금 상태로 충분함']});
+  /* ---- 인구통계 (말미 이동) ---- */
+  SCREENS.push({id:'sq5', type:'chips', no:'SQ5', sec:'응답자 정보', title:'현재 귀하께서 거주하고 계신 지역은 어디입니까?', sub:'시·도를 하나 선택해 주세요.', opts:SIDO});
+  SCREENS.push({id:'sq6', type:'single', no:'SQ6', title:'현재 귀하의 직업은 무엇입니까?', otherIdx:8,
+    opts:['학생','회사원·직장인','자영업·상업','농업·어업·임업','공무원·공공기관','주부','은퇴','무직','기타']});
+  SCREENS.push({id:'reward', type:'reward'});
+  SCREENS.push({id:'done', type:'done'});
+}
+rebuildScreens();
+
+/* ===== state ===== */
+var A = {}, hist = [], cur = 0;
+var screenoutReason = 0;
+var REWARD = {name:'', ph1:'', ph2:'', optout:false};
+var LAST_SCREEN = '';
+var FINISHED = false;
+
+function $(id){return document.getElementById(id)}
+function el(html){var d=document.createElement('div');d.innerHTML=html;return d.firstChild}
+function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+function pathIds(){
+  var p=[];
+  for(var i=0;i<SCREENS.length;i++){ var s=SCREENS[i]; if(s.cond&&!s.cond(A))continue; p.push(s.id); }
+  return p;
+}
+function toggleFont(){
+  var on=document.documentElement.classList.toggle('big');
+  var b=$('fontBtn'); b.classList.toggle('on',on);
+  b.textContent=on?'가 작게':'가 크게'; b.setAttribute('aria-pressed',on?'true':'false');
+}
+
+/* ===== render ===== */
+function render(){
+  var s=SCREENS[cur], m=$('main'); m.innerHTML='';
+  LAST_SCREEN=s.id;
+  var bn=$('stBanner');
+  if(s.type==='ivinfo'||s.id==='ivguide'||s.type==='intro'||s.type==='done'){ bn.hidden=true; }
+  else{ bn.innerHTML=(IS_B?'아래 질문은 <b>「'+esc(STATION)+'」</b>을 떠올리며 답해 주세요':'이 설문은 <b>「'+esc(STATION)+'」</b>을 기준으로 답해 주세요'); bn.hidden=false; }
+  var p=pathIds(), pi=p.indexOf(s.id);
+  var pct = s.type==='done' ? 100 : Math.round(pi/(p.length-1)*100);
+  $('pfill').style.width=pct+'%';
+  $('pnum').textContent = (s.type==='intro'||s.type==='done'||s.type==='ivinfo'||s.id==='ivguide')?'':(pct+'%');
+  $('btnPrev').style.display = (cur===0||s.type==='done')?'none':'block';
+  $('navbar').style.display = (s.type==='done')?'none':'block';
+  $('btnNext').textContent = s.type==='intro' ? '설문 시작하기' : (s.type==='reward' ? '설문 완료' : '다음');
+
+  if(s.type==='intro'){ renderIntro(m); return; }
+  if(s.type==='ivinfo'){ renderIvInfo(m); return; }
+  if(s.type==='info'){ m.appendChild(el(s.html)); addFeedback(m,s); return; }
+  if(s.type==='done'){ renderDone(m); return; }
+  if(s.type==='reward'){ renderReward(m); addErr(m); addFeedback(m,s); window.scrollTo(0,0); return; }
+
+  var head=(s.sec?'<div class="sec-label">'+s.sec+'</div>':'')+
+    '<span class="qno">'+s.no+(s.page?' · '+s.page:'')+'</span>'+
+    '<div class="qtitle">'+s.title+' <span class="req" aria-hidden="true">*</span></div>'+
+    (s.sub?'<div class="qsub">'+s.sub+'</div>':'');
+  m.appendChild(el('<div>'+head+'</div>'));
+
+  if(s.type==='single'){
+    s.opts.forEach(function(t,i){
+      var v=i+1, sel=A[s.id]===v;
+      var b=el('<button type="button" class="opt'+(sel?' sel':'')+'" role="radio" aria-checked="'+sel+'">'+
+        '<span class="dot"></span><span>'+t+'</span></button>');
+      b.onclick=function(){A[s.id]=v; hideErr(); render();};
+      m.appendChild(b);
+      if(s.otherIdx===i && sel){
+        var inp=el('<div class="form-row" style="margin:-.2rem 0 .8rem"><input type="text" id="otherTxt" maxlength="40" placeholder="직업을 적어 주세요 (선택)" aria-label="기타 직업"></div>');
+        var ip=inp.querySelector('input'); ip.value=A[s.id+'_txt']||'';
+        ip.oninput=function(){A[s.id+'_txt']=ip.value;};
+        m.appendChild(inp);
+      }
+    });
+  }
+  if(s.type==='multi'){
+    var arr=A[s.id]||[];
+    s.opts.forEach(function(t,i){
+      if(s.hideOpt && s.hideOpt(A,i)) return;
+      var v=i+1, sel=arr.indexOf(v)>=0;
+      var b=el('<button type="button" class="opt multi'+(sel?' sel':'')+'" role="checkbox" aria-checked="'+sel+'">'+
+        '<span class="dot"></span><span>'+t+'</span></button>');
+      b.onclick=function(){
+        var a=(A[s.id]||[]).slice();
+        var ex=(s.exclusive!==undefined)?s.exclusive+1:-1;
+        if(v===ex){ a = sel?[]:[v]; }
+        else{
+          var k=a.indexOf(ex); if(k>=0)a.splice(k,1);
+          var j=a.indexOf(v);
+          if(j>=0)a.splice(j,1);
+          else{ if(s.max&&a.length>=s.max){showErr('최대 '+s.max+'개까지 선택할 수 있습니다. 바꾸시려면 먼저 선택한 항목을 눌러 해제해 주세요.');return;} a.push(v); }
+        }
+        A[s.id]=a; hideErr(); render();
+      };
+      m.appendChild(b);
+    });
+  }
+  if(s.type==='likert'){
+    var ANC=s.anchors||LIK, ANCF=s.anchorsFull||ANC;
+    s.items.forEach(function(it){
+      var key=it[0], txt=it[1], val=A[key];
+      var w=el('<div class="lk"><div class="lk-q">'+txt+'</div><div class="lk-row" role="radiogroup" aria-label="'+esc(txt)+'"></div>'+
+        '<div class="lk-picked">'+(val?('선택함 : '+ANCF[val-1]):'')+'</div></div>');
+      var row=w.querySelector('.lk-row');
+      ANC.forEach(function(lab,i){
+        var v=i+1, sel=val===v;
+        var b=el('<button type="button"'+(sel?' class="sel"':'')+' role="radio" aria-checked="'+sel+'"><b>'+v+'</b>'+lab+'</button>');
+        b.onclick=function(){A[key]=v; hideErr(); render();};
+        row.appendChild(b);
+      });
+      m.appendChild(w);
+    });
+  }
+  if(s.type==='chips'){
+    var g=el('<div class="chip-grid sido" role="radiogroup"></div>');
+    s.opts.forEach(function(t,i){
+      var v=i+1, sel=A[s.id]===v;
+      var b=el('<button type="button" role="radio" aria-checked="'+sel+'"'+(sel?' class="sel"':'')+'>'+t+'</button>');
+      b.onclick=function(){A[s.id]=v; hideErr(); render();};
+      g.appendChild(b);
+    });
+    m.appendChild(g);
+  }
+  addErr(m);
+  addFeedback(m,s);
+  window.scrollTo(0,0);
+}
+function addErr(m){ m.appendChild(el('<div class="err" id="errBox" role="alert">⚠ <span id="errTxt"></span></div>')); }
+
+function renderIntro(m){
+  m.appendChild(el(
+   '<div class="intro-hero"><div class="intro-bar"></div><div class="intro-body">'+
+   '<h1>철도역 이용 경험 조사</h1><div class="sub">'+(IS_B?'사전 테스트 · ':'')+'소요시간 약 5분 · 모바일 설문</div>'+
+   '<div class="notice">'+
+   '<p>안녕하십니까? 한국철도공사(코레일)는 코레일 역을 이용하신 고객을 대상으로 이용 경험 확인을 위한 설문조사를 진행하고 있습니다.</p>'+
+   '<p>응답해 주신 내용은 통계적 목적으로만 사용되며, 개인정보는 「통계법」에 따라 철저하게 보호됩니다.</p>'+
+   '<p>본 설문은 향후 코레일 역사 개선 및 고객 서비스 개선을 위한 기초자료로 활용되니 바쁘시더라도 잠시 시간을 내주시어 응답해 주시길 부탁드립니다.</p>'+
+   '<p>조사는 약 5분 정도 소요됩니다. 조사를 끝까지 성실하게 참여하신 분들께는 <b>‘메가커피 아메리카노 1개’</b>를 모바일 쿠폰으로 보내 드리니, 많은 참여 부탁드립니다.</p>'+
+   '</div>'+
+   '<div class="org-row"><div><span>조사주관기관</span><b>한국철도공사</b></div>'+
+   '<div><span>조사수행기관</span><b>'+(IS_B?'사전 테스트 진행 · 김형중':'리서치앤리서치 강혜선 책임연구원 (02-3484-3067)')+'</b></div></div>'+
+   '<details class="law"><summary>통계법 제33조(비밀의 보호)</summary>'+
+   '<p>① 통계의 작성과정에서 알려진 사항으로서 개인이나 법인 또는 단체 등의 비밀에 속하는 사항은 보호되어야 한다.</p>'+
+   '<p>② 통계의 작성을 위하여 수집된 개인이나 법인 또는 단체 등의 비밀에 속하는 자료는 통계작성 외의 목적으로 사용되어서는 아니 된다.</p></details>'+
+   '</div></div>'));
+  if(!ENDPOINT){ m.appendChild(el('<div class="err show" role="alert">⚠ <span>전송 주소(config.js)가 설정되지 않아 응답이 저장되지 않습니다. 연구자에게 알려 주세요.</span></div>')); }
+  m.appendChild(el('<div style="text-align:center;font-size:.68rem;color:#B7C2CC;margin-top:1.2rem">화면판 '+BUILD+' · '+(IS_B?'사전 테스트판':'본조사 동일판')+'</div>'));
+}
+
+/* ===== 종료 화면(리워드) ===== */
+function renderReward(m){
+  m.appendChild(el('<div><span class="qno">설문 완료</span>'+
+    '<div class="qtitle">바쁘신 와중에도 설문조사에 응답해 주셔서 감사합니다.</div>'+
+    '<div class="qsub">귀하께서 응답해 주신 내용은 향후 코레일 역사 내 서비스 향상을 위한 중요한 기초 자료로 활용하겠습니다.</div></div>'));
+  m.appendChild(el('<div class="card" style="margin-bottom:.9rem">'+
+    '<p>응답 완료 감사의 의미로 <b>‘메가커피 아메리카노 1개’</b>를 모바일 쿠폰으로 보내 드릴 예정입니다.</p>'+
+    '<p>모바일 쿠폰을 받으실 휴대폰 번호를 입력해 주세요. 입력하신 휴대폰 번호는 답례품 발송 목적으로만 활용됩니다. 답례품은 본 조사가 완료되는 <b>9월 30일</b>에 발송될 예정입니다.</p></div>'));
+  var f=el('<div class="reward-form">'+
+    '<div class="form-row"><label for="rwName">응답자 성함</label><input type="text" id="rwName" maxlength="20" placeholder="성함" autocomplete="name"></div>'+
+    '<div class="form-row"><label>응답자 휴대폰 번호</label>'+
+    '<div class="phone-row"><span>010</span><span>-</span>'+
+    '<input id="ph1" inputmode="numeric" maxlength="4" placeholder="____" aria-label="휴대폰 번호 가운데 4자리">'+
+    '<span>-</span><input id="ph2" inputmode="numeric" maxlength="4" placeholder="____" aria-label="휴대폰 번호 마지막 4자리"></div></div>'+
+    '<label class="chk-row"><input type="checkbox" id="rwOpt"><span>이름/전화번호 입력을 원하지 않음 <small>(답례품 받지 않음)</small></span></label>'+
+    '</div>');
+  m.appendChild(f);
+  var nm=f.querySelector('#rwName'), p1=f.querySelector('#ph1'), p2=f.querySelector('#ph2'), op=f.querySelector('#rwOpt');
+  nm.value=REWARD.name; p1.value=REWARD.ph1; p2.value=REWARD.ph2; op.checked=REWARD.optout;
+  function dis(){ var d=op.checked; nm.disabled=p1.disabled=p2.disabled=d; f.classList.toggle('off',d); }
+  dis();
+  nm.oninput=function(){REWARD.name=nm.value.trim(); hideErr();};
+  p1.oninput=function(){p1.value=p1.value.replace(/\D/g,''); REWARD.ph1=p1.value; hideErr(); if(p1.value.length===4)p2.focus();};
+  p2.oninput=function(){p2.value=p2.value.replace(/\D/g,''); REWARD.ph2=p2.value; hideErr();};
+  op.onchange=function(){REWARD.optout=op.checked; dis(); hideErr();};
+  m.appendChild(el('<p class="qsub" style="margin-top:.2rem">번호를 입력하지 않아도 앞의 응답은 그대로 저장됩니다.</p>'));
+}
+
+/* ===== 사전 테스트 전용: 질문 점검 + 중점 문항 ===== */
+var IV={und:{},note:{},deep:{}};
+var INFO={vul:[],exp:''};
+var VUL_OPTS=['해당 없음','만 65세 이상','장애인','임산부','영유아·어린이를 데리고 이용','스마트폰 앱이 익숙하지 않음'];
+/* 중점 9문항 — V2 재매핑 (kind mc = 정답 있음 / yn = 알아차림) */
+var DEEP={
+ sq1:[{k:'sq1_3',kind:'mc',t:'「예매만 대신해 주었고, 나는 이 역에 가지 않았다」',
+   q:'위 보기는 어떤 경우를 말할까요?',
+   opts:['내가 표를 사고, 나도 그 역에 갔다','내가 표만 사 주고, 나는 그 역에 가지 않았다','다른 사람이 내 표를 사 주었다'], ans:1}],
+ sq7:[{k:'sq7_dis',kind:'mc',t:'「몸이 불편하여 역을 이용할 때 도움이 필요함」 · 「중증 장애인」 · 「경증 장애인」',
+   q:'장애인 등록은 되어 있지 않지만, 무릎이 아파 계단이 힘든 분은 어느 보기에 해당할까요?',
+   opts:['중증 장애인','경증 장애인','몸이 불편하여 역을 이용할 때 도움이 필요함'], ans:2}],
+ a1:[{k:'a1',kind:'mc',t:'「코레일앱으로 승차권을 예매·결제하는 것이 얼마나 쉽다고 생각하시나요?」',
+   q:'이 질문에 「매우 쉽다」고 답하면 어떤 뜻일까요?',
+   opts:['앱으로 표 사는 것이 쉽다','앱으로 표 사는 것이 어렵다','앱을 써 본 적이 없다'], ans:0}],
+ a3:[{k:'a3_vs_sq8',kind:'yn',t:'앞의 SQ8은 「평소 열차 이용 빈도」를, 이번 A3는 「이 역 이용 빈도」를 물었습니다',
+   q:'두 질문이 다른 것을 묻는다는 점을 알아차리셨나요?',
+   opts:['네, 알아차렸다','아니요, 같은 질문인 줄 알았다','잘 모르겠다']}],
+ b1c:[{k:'b1_ctrl',kind:'yn',t:'방금 세 화면에 있던 문장 — 「스스로 처리할 수 있었다」·「미리 알 수 있었다」·「해결할 방법이 있다고 느꼈다」',
+   q:'이 세 문장이 서로 다른 내용으로 느껴지셨나요?',
+   opts:['네, 서로 다른 내용이었다','아니요, 비슷비슷했다','잘 모르겠다']}],
+ b3:[{k:'be2',kind:'yn',t:'「도움을 요청하기 어렵다고 느꼈다」',
+   q:'도움이 필요한 적이 없으셨다면, 이 문장에 답하기 곤란하지 않으셨나요?',
+   opts:['답하는 데 문제 없었다','답하기 곤란했다','도움이 필요한 적이 있어서 해당 없음']}],
+ b6:[{k:'b56',kind:'yn',t:'바로 앞 질문은 「만족」을, 이번 질문은 「이용 의향」을 물었습니다',
+   q:'두 질문의 답 기준(보기 문구)이 달라진 것을 알아차리셨나요?',
+   opts:['네, 알아차렸다','아니요, 몰랐다','잘 모르겠다']}],
+ b7b:[{k:'b7_split',kind:'mc',t:'B7-1 「역무원」 · B7-2 「청소·시설점검 등을 하는 직원」',
+   q:'승차권 문의를 받아 주는 직원을 보셨다면, 어느 질문에서 「보았다」로 답해야 할까요?',
+   opts:['B7-1 역무원','B7-2 청소·시설점검 직원','둘 다'], ans:0}],
+ b8:[{k:'b8_max',kind:'mc',t:'「최대 2개까지 선택」 · 「지금 상태로 충분함」',
+   q:'방금 문항에서 보기는 몇 개까지 고를 수 있었나요?',
+   opts:['1개만','최대 2개','개수 제한 없음'], ans:1}]
+};
+var QTYPES={single:1,multi:1,likert:1,chips:1,reward:1};
+
+function addFeedback(m,s){
+  if(!IS_B) return;
+  if(!QTYPES[s.type]) return;
+  var deeps=DEEP[s.id]||[];
+  var w=el('<div class="iv"><div class="iv-head">📝 질문 점검 <span class="tag">사전 테스트</span></div>'+
+    '<div class="iv-label">방금 질문, 한 번에 이해되셨나요? (필수)</div>'+
+    '<div class="und-row">'+
+    '<button type="button" data-u="O"'+(IV.und[s.id]==='O'?' class="sel"':'')+'>예, 이해했어요</button>'+
+    '<button type="button" data-u="X"'+(IV.und[s.id]==='X'?' class="sel"':'')+'>아니요, 헷갈렸어요</button>'+
+    '</div>'+
+    '<div class="iv-label">다시 생각하게 했거나 헷갈린 단어·표현 (선택)</div>'+
+    '<input type="text" class="iv-note" maxlength="200" placeholder="있으면 적어 주세요 — 없으면 비워 두셔도 됩니다">'+
+    '</div>');
+  var und=w.querySelectorAll('.und-row button');
+  und.forEach(function(b){ b.onclick=function(){ IV.und[s.id]=b.getAttribute('data-u'); und.forEach(function(x){x.classList.toggle('sel',x===b)}); hideErr(); }; });
+  var note=w.querySelector('.iv-note');
+  if(IV.note[s.id])note.value=IV.note[s.id];
+  note.oninput=function(){IV.note[s.id]=note.value};
+  deeps.forEach(function(d){
+    if(!IV.deep[d.k])IV.deep[d.k]={pick:null,re:''};
+    var dv=el('<div class="deep"><div class="deep-title">'+d.t+'</div>'+
+      '<div class="deep-q">'+d.q+'</div><div class="deep-opts"></div>'+
+      '<button type="button" class="deep-more">✚ 이 부분에 하고 싶은 말 적기 (선택)</button>'+
+      '<div class="deep-note"><textarea maxlength="500" placeholder="편하게 적어 주세요"></textarea></div></div>');
+    var og=dv.querySelector('.deep-opts');
+    d.opts.forEach(function(ot,oi){
+      var ob=el('<button type="button" class="deep-opt'+(IV.deep[d.k].pick===oi?' sel':'')+'"><span class="dot"></span><span>'+ot+'</span></button>');
+      ob.onclick=function(){ IV.deep[d.k].pick=oi; og.querySelectorAll('.deep-opt').forEach(function(x,xi){x.classList.toggle('sel',xi===oi)}); };
+      og.appendChild(ob);
+    });
+    var more=dv.querySelector('.deep-more'), nt=dv.querySelector('.deep-note'), ta=dv.querySelector('textarea');
+    ta.value=IV.deep[d.k].re||''; if(ta.value) nt.classList.add('open');
+    more.onclick=function(){var o=nt.classList.toggle('open'); if(o)ta.focus();};
+    ta.oninput=function(){IV.deep[d.k].re=ta.value};
+    w.appendChild(dv);
+  });
+  m.appendChild(w);
+}
+function renderIvInfo(m){
+  m.appendChild(el('<div><span class="qno">시작하기 전에</span>'+
+    '<div class="qtitle">몇 가지만 먼저 여쭙겠습니다 <span class="req">*</span></div>'+
+    '<div class="qsub">이 두 가지는 사전 테스트 분석에만 쓰이며, 이름 없이 기록됩니다.</div></div>'));
+  function chips(label,key,opts,multi,exclusive){
+    var fr=el('<div class="form-row"><label>'+label+'</label><div class="chip-grid"></div></div>');
+    var g=fr.querySelector('.chip-grid');
+    opts.forEach(function(o){
+      var sel = multi ? INFO[key].indexOf(o)>=0 : INFO[key]===o;
+      var b=el('<button type="button"'+(sel?' class="sel"':'')+'>'+o+'</button>');
+      b.onclick=function(){
+        if(multi){ var a=INFO[key];
+          if(o===exclusive){ INFO[key]=a.indexOf(o)>=0?[]:[o]; }
+          else{ var ei=a.indexOf(exclusive); if(ei>=0)a.splice(ei,1); var j=a.indexOf(o); if(j>=0)a.splice(j,1); else a.push(o); }
+        } else INFO[key]=o;
+        hideErr(); render();
+      };
+      g.appendChild(b);
+    });
+    m.appendChild(fr);
+  }
+  chips('다음 중 해당되는 것을 모두 선택해 주세요 (필수)','vul',VUL_OPTS,true,'해당 없음');
+  chips('역무원이 없는 기차역(무인역)을 이용해 보신 적이 있나요? (필수)','exp',['있음','없음']);
+  addErr(m);
+  if(!ENDPOINT){ m.appendChild(el('<div class="err show" role="alert" style="margin-top:.6rem">⚠ <span>전송 주소(config.js)가 설정되지 않아 응답이 저장되지 않습니다. 연구자에게 알려 주세요.</span></div>')); }
+  m.appendChild(el('<div style="text-align:center;font-size:.68rem;color:#B7C2CC;margin-top:1.6rem">화면판 '+BUILD+' · 사전 테스트판</div>'));
+}
+
+function showErr(t){var b=$('errBox');if(!b)return;$('errTxt').textContent=t;b.classList.add('show');b.scrollIntoView({block:'nearest'});}
+function hideErr(){var b=$('errBox');if(b)b.classList.remove('show');}
+
+/* ===== validation & navigation ===== */
+function validate(s){
+  if(s.type==='single'||s.type==='chips'){ if(!A[s.id]){showErr('다음으로 넘어가려면 응답을 선택해 주세요.');return false;} }
+  if(s.type==='multi'){ if(!A[s.id]||!A[s.id].length){showErr('한 개 이상 선택해 주세요. 해당되는 것이 없으면 마지막 항목을 눌러 주세요.');return false;} }
+  if(s.type==='likert'){
+    for(var i=0;i<s.items.length;i++){ if(!A[s.items[i][0]]){showErr(s.items.length>1?('모든 문항에 응답해 주세요. ('+(i+1)+'번째 문항이 비어 있습니다)'):'응답을 선택해 주세요.');return false;} }
+  }
+  if(s.type==='ivinfo'){
+    if(!INFO.vul.length){showErr('해당되는 것을 선택해 주세요. 없으면 「해당 없음」을 눌러 주세요.');return false;}
+    if(!INFO.exp){showErr('무인역 이용 경험을 선택해 주세요.');return false;}
+  }
+  if(s.type==='reward'){
+    if(!REWARD.optout){
+      if(!REWARD.name){showErr('성함을 입력해 주세요. 답례품을 원하지 않으시면 아래 「입력을 원하지 않음」에 체크해 주세요.');return false;}
+      if(REWARD.ph1.length!==4||REWARD.ph2.length!==4){showErr('휴대폰 번호를 끝까지 입력해 주세요. 원하지 않으시면 아래 「입력을 원하지 않음」에 체크해 주세요.');return false;}
+    }
+  }
+  if(IS_B && QTYPES[s.type]){ if(!IV.und[s.id]){showErr('아래 노란 칸의 「질문 점검」에도 답해 주세요.');return false;} }
+  return true;
+}
+function goNext(){
+  var s=SCREENS[cur];
+  if(s.type!=='intro'&&s.type!=='info'&&!validate(s))return;
+  if(s.type==='intro'){ sendEvent('access'); }
+  if(s.id==='sq1'&&(A.sq1===3||A.sq1===4)){ screenoutReason=A.sq1; renderScreenout(); return; }
+  if(s.type==='reward'){
+    if(!REWARD.optout){ confirmPhone(function(){ finishSurvey(); }); return; }
+    finishSurvey(); return;
+  }
+  hist.push(cur);
+  do{cur++;}while(SCREENS[cur].cond&&!SCREENS[cur].cond(A));
+  render();
+  sendProgress();
+}
+function goPrev(){ if(!hist.length)return; cur=hist.pop(); hideErr(); render(); }
+
+/* 휴대폰 번호 재확인 팝업 (V2 [WEB] 요구) */
+function confirmPhone(ok){
+  openModal('입력하신 번호가 맞나요?',
+    '<div class="modal-phone">010-'+esc(REWARD.ph1)+'-'+esc(REWARD.ph2)+'</div><p class="qsub" style="text-align:center;margin:0">이 번호로 모바일 쿠폰이 발송됩니다.</p>',
+    [{t:'수정할게요',cls:'btn-ghost',f:closeModal},{t:'네, 맞습니다',cls:'btn-primary',f:function(){closeModal();ok();}}]);
+}
+function openModal(title,body,btns){
+  $('modalTitle').textContent=title; $('modalBody').innerHTML=body;
+  var bb=$('modalBtns'); bb.innerHTML='';
+  btns.forEach(function(b){ var x=el('<button type="button" class="btn '+b.cls+'">'+b.t+'</button>'); x.onclick=b.f; bb.appendChild(x); });
+  $('modalBg').hidden=false;
+}
+function closeModal(){ $('modalBg').hidden=true; }
+
+function finishSurvey(){
+  FINISHED=true;
+  hist.push(cur); cur=SCREENS.length-1; render();
+  submitFinal('complete');
+}
+
+/* ===== screen-out ===== */
+function renderScreenout(){
+  FINISHED=true; LAST_SCREEN='screenout';
+  var m=$('main'); $('navbar').style.display='none'; $('pfill').style.width='100%'; $('pnum').textContent='';
+  m.innerHTML='';
+  if(IS_B){
+    m.appendChild(el('<div class="card center" style="margin-top:2rem">'+
+      '<p style="font-weight:700;font-size:1.15rem;color:var(--primary)">설문이 종료되었습니다.</p>'+
+      '<p class="qsub">실제 조사에서는 이 지점에서 설문이 끝납니다. 그 역을 직접 이용하신 분만 대상으로 하기 때문입니다.</p>'+
+      '<p class="qsub">사전 테스트에서는 <b>이 종료 화면이 제대로 나오는지</b>도 확인 대상이므로, 여기까지 오신 것으로 충분합니다. 감사합니다.</p>'+
+      '<div class="save-status" id="saveStatus"></div><div id="fallbackBox"></div>'+
+      '<button class="mini-btn" style="margin-top:1rem" onclick="location.reload()">처음부터 다시 해 보기</button></div>'));
+  } else {
+    m.appendChild(el('<div class="card center" style="margin-top:2rem">'+
+      '<p style="font-weight:700;font-size:1.15rem;color:var(--primary)">설문이 종료되었습니다.</p>'+
+      '<p class="qsub">이번 조사는 '+esc(STATION)+'을 직접 이용하신 분을 대상으로 합니다.<br>참여해 주셔서 감사합니다.</p>'+
+      '<div class="save-status" id="saveStatus"></div><div id="fallbackBox"></div></div>'));
+  }
+  submitFinal('screenout');
+}
+
+/* ===== done ===== */
+function renderDone(m){
+  var rw = REWARD.optout ? '' : '<p class="qsub">‘메가커피 아메리카노 1개’ 모바일 쿠폰은 <b>9월 30일</b>에 입력해 주신 번호로 발송됩니다.</p>';
+  if(IS_B){
+    m.appendChild(el('<div class="card center" style="margin-top:1.5rem"><div class="done-icon" aria-hidden="true"></div>'+
+      '<p style="font-weight:700;font-size:1.2rem;color:var(--primary)">사전 테스트가 끝났습니다.</p><p>끝까지 답해 주셔서 감사합니다.</p>'+
+      '<p class="qsub">이번 조사는 실제 조사에 앞서 <b>질문이 잘 이해되는지 미리 확인하는 사전 테스트</b>였습니다. 답해 주신 내용과 「헷갈렸다」고 알려 주신 부분은 <b>설문 문항을 고치는 데에만</b> 쓰이며, 논문의 분석 자료로는 사용되지 않습니다.</p>'+rw+
+      '<div class="save-status" id="saveStatus">응답을 저장하는 중…</div><div id="fallbackBox"></div></div>'));
+  } else {
+    m.appendChild(el('<div class="card center" style="margin-top:1.5rem"><div class="done-icon" aria-hidden="true"></div>'+
+      '<p style="font-weight:700;font-size:1.2rem;color:var(--primary)">설문이 완료되었습니다.</p><p>소중한 의견 감사합니다.</p>'+rw+
+      '<div class="save-status" id="saveStatus">응답을 저장하는 중…</div><div id="fallbackBox"></div></div>'));
+  }
+}
+
+/* ===== 데이터 레코드 (평면 컬럼 — 시트 헤더와 1:1) ===== */
+function bin(arr,n,pfx){ var o={}; for(var i=1;i<=n;i++){ o[pfx+'_'+i]=(arr&&arr.indexOf(i)>=0)?1:0; } return o; }
+function buildRow(kind){
+  var r={
+    RESP_ID:RESP_ID, VERSION:MODE, KIND:kind, ACCESS_TS:ACCESS_TS, COMPLETE_TS:new Date().toISOString(),
+    DUR_S:Math.round((Date.now()-T0)/1000), SCREENOUT_REASON: kind==='screenout'?screenoutReason:0,
+    STATION:STATION, LAST_SCREEN:LAST_SCREEN, FONT_BIG:document.documentElement.classList.contains('big')?1:0, BUILD:BUILD,
+    SQ1:A.sq1||'', SQ2:A.sq2||'', SQ3:A.sq3||'', SQ4:A.sq4||''
+  };
+  Object.assign(r, bin(A.sq7,7,'SQ7'));
+  r.SQ8=A.sq8||''; r.SQ9=A.sq9||'';
+  r.A1=A.A1||''; r.A2 = (A.sq2===2) ? 8 : (A.a2||''); r.A3=A.a3||'';
+  ['BA1','BA2','BA3','BB1','BB2','BB3','BC1','BC2','BC3','BD1','BD2','BE1','BE2','B5','B6'].forEach(function(k){ r[k]=A[k]||''; });
+  r.B4=A.b4||''; r.B7_1=A.b7a||''; r.B7_2=A.b7b||'';
+  Object.assign(r, bin(A.b8,8,'B8'));
+  r.SQ5=A.sq5||''; r.SQ6=A.sq6||''; r.SQ6_TXT=A.sq6_txt||'';
+  r.REWARD_OPTOUT = REWARD.optout?1:0;
+  r.REWARD_ENTERED = (!REWARD.optout && REWARD.ph1.length===4 && REWARD.ph2.length===4)?1:0;
+  if(IS_B){
+    r.INFO_VUL=INFO.vul.join(';'); r.INFO_EXP=INFO.exp;
+    var ids=['sq1','sq2','sq3','sq4','sq7','sq8','sq9','a1','a2','a3','b1a','b1b','b1c','b2','b3','b4','b5','b6','b7a','b7b','b8','sq5','sq6','reward'];
+    ids.forEach(function(id){ r['UND_'+id.toUpperCase()]=IV.und[id]||''; r['NOTE_'+id.toUpperCase()]=IV.note[id]||''; });
+    Object.keys(DEEP).forEach(function(sid){ DEEP[sid].forEach(function(d){
+      var v=IV.deep[d.k]||{pick:null,re:''};
+      var pick=(v.pick===null||v.pick===undefined)?'':(v.pick+1);
+      r['DEEP_'+d.k.toUpperCase()]=pick;
+      r['DEEP_'+d.k.toUpperCase()+'_OK']= d.kind==='mc' ? (pick===''?'':(v.pick===d.ans?1:0)) : '';
+      r['DEEP_'+d.k.toUpperCase()+'_RE']=v.re||'';
+    }); });
+  }
+  return r;
+}
+function buildReward(){
+  return {RESP_ID:RESP_ID, VERSION:MODE, NAME:REWARD.optout?'':REWARD.name,
+          PHONE:(REWARD.optout||REWARD.ph1.length!==4)?'':('010-'+REWARD.ph1+'-'+REWARD.ph2),
+          OPTOUT:REWARD.optout?1:0, TS:new Date().toISOString()};
+}
+
+/* ===== 전송: Google Apps Script 웹앱 ===== */
+function postJSON(payload, opts){
+  opts=opts||{};
+  if(!ENDPOINT) return Promise.reject(new Error('no-endpoint'));
+  var body=JSON.stringify(payload);
+  if(opts.beacon && navigator.sendBeacon){ try{ if(navigator.sendBeacon(ENDPOINT, body)) return Promise.resolve({ok:true,beacon:true}); }catch(e){} }
+  return fetch(ENDPOINT,{method:'POST',body:body,keepalive:!!opts.keepalive}).then(function(r){ return r.json(); });
+}
+function sendEvent(kind){ postJSON({type:'event', row:buildRow(kind)},{beacon:true}).catch(function(){}); }
+var _progTimer=null;
+function sendProgress(){
+  clearTimeout(_progTimer);
+  _progTimer=setTimeout(function(){ if(!FINISHED) postJSON({type:'progress', row:buildRow('progress')},{beacon:true}).catch(function(){}); },600);
+}
+document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='hidden'&&!FINISHED&&cur>0) postJSON({type:'progress',row:buildRow('progress')},{beacon:true}).catch(function(){}); });
+
+var LAST_REC_TXT='';
+function submitFinal(kind){
+  var row=buildRow(kind), rew=(kind==='complete')?buildReward():null;
+  var payload={type:'final', row:row, reward:rew};
+  LAST_REC_TXT='[철도역 이용 경험 조사 · 응답 '+RESP_ID+']\n'+JSON.stringify(payload);
+  var st=$('saveStatus'); if(st)st.textContent='응답을 저장하는 중…';
+  try{ localStorage.setItem('survey_queue_'+RESP_ID, JSON.stringify(payload)); }catch(e){}
+  var tries=0;
+  function attempt(){
+    tries++;
+    return postJSON(payload).then(function(res){
+      if(res&&res.ok){ onSaved(); }
+      else throw new Error('bad-response');
+    }).catch(function(err){
+      if(tries<3) return new Promise(function(r){setTimeout(r,1500*tries)}).then(attempt);
+      onFailed(err);
+    });
+  }
+  attempt();
+}
+function onSaved(){
+  try{ localStorage.removeItem('survey_queue_'+RESP_ID); }catch(e){}
+  var st=$('saveStatus'); if(st){ st.textContent='✓ 응답이 저장되었습니다.'; st.style.color='var(--primary)'; }
+}
+function onFailed(err){
+  var st=$('saveStatus'); if(st) st.textContent='';
+  var box=$('fallbackBox'); if(!box)return;
+  box.innerHTML='<div class="copy-fallback" style="text-align:center">'+
+    '<p class="qsub" style="text-align:center;margin:.2rem 0 .6rem"><b style="color:var(--alert)">응답이 자동 저장되지 않았습니다.</b><br>인터넷 연결을 확인하고 아래 버튼을 눌러 다시 시도해 주세요.</p>'+
+    '<button class="btn btn-primary" style="width:100%;margin-bottom:.55rem" onclick="retrySubmit()">다시 저장하기</button>'+
+    '<button type="button" class="fb-toggle" id="pvToggle" aria-expanded="false">그래도 안 되면 — 응답 내용 복사해서 보내기</button>'+
+    '<div id="pvArea" hidden style="margin-top:.4rem;text-align:left">'+
+    '<p class="qsub">아래 버튼으로 복사한 뒤 <b style="color:var(--primary)">카카오톡 → 김형중과의 대화방</b>에 붙여넣어 보내 주세요.</p>'+
+    '<button class="mini-btn" id="copyBtn" onclick="copyResult()">응답 내용 복사하기</button>'+
+    '<textarea readonly id="fbTxt" style="width:100%;min-height:5rem;font-size:.72rem;border:1.5px solid var(--hair);border-radius:10px;padding:.5rem;font-family:monospace;background:var(--white);color:var(--ink);margin-top:.4rem"></textarea>'+
+    '</div></div>';
+  $('fbTxt').value=LAST_REC_TXT;
+  var pv=$('pvToggle'), pa=$('pvArea');
+  pv.onclick=function(){pa.hidden=!pa.hidden; pv.setAttribute('aria-expanded',String(!pa.hidden));};
+}
+function retrySubmit(){
+  var raw=null; try{ raw=localStorage.getItem('survey_queue_'+RESP_ID); }catch(e){}
+  var payload=raw?JSON.parse(raw):null; if(!payload)return;
+  var box=$('fallbackBox'); if(box)box.innerHTML='';
+  var st=$('saveStatus'); if(st)st.textContent='다시 저장하는 중…';
+  postJSON(payload).then(function(res){ if(res&&res.ok)onSaved(); else onFailed(); }).catch(onFailed);
+}
+function copyResult(){
+  var ok=copyPlain(LAST_REC_TXT), b=$('copyBtn');
+  if(b) b.textContent= ok?'복사되었습니다 — 카카오톡에 붙여넣어 주세요':'복사가 안 되면 아래 내용을 길게 눌러 직접 복사해 주세요';
+}
+function copyPlain(txt){
+  var ok=false;
+  try{ var ta=document.createElement('textarea'); ta.value=txt; ta.setAttribute('readonly','');
+    ta.style.position='fixed'; ta.style.left='-9999px'; ta.style.top='0'; document.body.appendChild(ta);
+    ta.focus(); ta.select(); try{ta.setSelectionRange(0,txt.length)}catch(e){}
+    ok=document.execCommand('copy'); document.body.removeChild(ta); }catch(e){ ok=false; }
+  try{ if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(function(){},function(){}); } }catch(e){}
+  return ok;
+}
+/* 이전 방문에서 저장 실패한 응답이 남아 있으면 조용히 재전송 */
+(function flushQueue(){
+  if(!ENDPOINT) return;
+  try{
+    for(var i=0;i<localStorage.length;i++){
+      var k=localStorage.key(i); if(!k||k.indexOf('survey_queue_')!==0) continue;
+      var raw=localStorage.getItem(k); if(!raw) continue;
+      (function(key,pl){ postJSON(JSON.parse(pl)).then(function(res){ if(res&&res.ok) localStorage.removeItem(key); }).catch(function(){}); })(k,raw);
+    }
+  }catch(e){}
+})();
+
+/* ===== boot ===== */
+if(IS_B){ $('modeChip').hidden=false; }
+document.title = IS_B ? '철도역 이용 경험 조사 사전 테스트' : '철도역 이용 경험 조사';
+render();
+</script>
+
+</body>
+</html>
