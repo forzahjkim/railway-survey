@@ -181,6 +181,8 @@ main{flex:1;padding:1.1rem .95rem 7.5rem}
 .deep{background:#fff;border:1.5px solid var(--iv-line);border-radius:10px;padding:.7rem .75rem;margin-top:.7rem}
 .deep-title{font-size:.85rem;font-weight:700;color:var(--iv-ink);margin-bottom:.25rem}
 .deep-why{font-size:.75rem;color:var(--muted);margin-bottom:.5rem;line-height:1.5}
+.deep-req{display:inline-block;font-size:.72rem;font-weight:700;color:#fff;background:#C0392B;border-radius:999px;padding:.05rem .5rem;margin-bottom:.35rem}
+.deep.need{border-color:#C0392B;box-shadow:0 0 0 2px rgba(192,57,43,.18)}
 .mis-row{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.45rem}
 .mis-row button{border:1.5px solid var(--iv-line);background:#fff;border-radius:999px;
   padding:.3rem .65rem;font-size:.76rem;font-family:inherit;color:var(--iv-ink);cursor:pointer}
@@ -284,7 +286,7 @@ input:disabled{background:#F1F4F7 !important;color:#9AA5B0}
    응답 전송: Google Apps Script 웹앱 (config.js의 SURVEY_ENDPOINT)
    ===================================================================== */
 var MODE = 'B';
-var BUILD = 'V6-0';
+var BUILD = 'V6-1';
 var IS_B = (MODE === 'B');
 var MIN = IS_B ? '10' : '5';           /* 표기 소요시간 — B판은 질문 점검 때문에 더 걸림(실측 9.4분) */
 var STATION = IS_B ? 'A역' : '해남역';
@@ -319,6 +321,7 @@ function rebuildScreens(){
       '<ul class="checklist">'+
       '<li>본조사를 시작하기 전에, <b>질문이 잘 이해되는지</b>를 먼저 확인하는 조사입니다.</li>'+
       '<li>각 질문에 답하신 뒤, 그 아래 <b>노란 칸</b>에서 「질문이 한 번에 이해되셨는지」를 한 번 더 여쭙습니다.</li>'+
+      '<li>일부 질문에는 노란 칸 아래에 <b>「확인 질문」</b>이 하나 더 있습니다. 이번 테스트에서 가장 중요한 부분이니 꼭 답해 주세요.</li>'+
       '<li>헷갈리거나 어색한 부분이 있으면 <b>솔직하게</b> 알려 주세요. 지적해 주시는 내용이 많을수록 연구에 큰 도움이 됩니다. <b>정답은 없습니다.</b></li>'+
       '<li>설문 문항에는 <b>역 이름</b>이 들어갑니다. 실제로 어느 역인지보다, <b>그런 상황을 떠올렸을 때 질문이 이해되는지</b>가 이 조사에서 보려는 것입니다.</li>'+
       '<li>응답은 자동으로 저장됩니다. 소요시간은 <b>약 10분</b>입니다.</li>'+
@@ -630,14 +633,14 @@ function addFeedback(m,s){
   note.oninput=function(){IV.note[s.id]=note.value};
   deeps.forEach(function(d){
     if(!IV.deep[d.k])IV.deep[d.k]={pick:null,re:''};
-    var dv=el('<div class="deep"><div class="deep-title">'+d.t+'</div>'+
+    var dv=el('<div class="deep" data-k="'+d.k+'"><span class="deep-req">확인 질문 · 필수</span><div class="deep-title">'+d.t+'</div>'+
       '<div class="deep-q">'+d.q+'</div><div class="deep-opts"></div>'+
       '<button type="button" class="deep-more">✚ 이 부분에 하고 싶은 말 적기 (선택)</button>'+
       '<div class="deep-note"><textarea maxlength="500" placeholder="편하게 적어 주세요"></textarea></div></div>');
     var og=dv.querySelector('.deep-opts');
     d.opts.forEach(function(ot,oi){
       var ob=el('<button type="button" class="deep-opt'+(IV.deep[d.k].pick===oi?' sel':'')+'"><span class="dot"></span><span>'+ot+'</span></button>');
-      ob.onclick=function(){ IV.deep[d.k].pick=oi; og.querySelectorAll('.deep-opt').forEach(function(x,xi){x.classList.toggle('sel',xi===oi)}); };
+      ob.onclick=function(){ IV.deep[d.k].pick=oi; og.querySelectorAll('.deep-opt').forEach(function(x,xi){x.classList.toggle('sel',xi===oi)}); dv.classList.remove('need'); hideErr(); };
       og.appendChild(ob);
     });
     var more=dv.querySelector('.deep-more'), nt=dv.querySelector('.deep-note'), ta=dv.querySelector('textarea');
@@ -694,6 +697,9 @@ function validate(s){
     }
   }
   if(IS_B && QTYPES[s.type]){ if(!IV.und[s.id]){showErr('아래 노란 칸의 「질문 점검」에도 답해 주세요.');return false;} }
+  if(IS_B && QTYPES[s.type]){ var dd=DEEP[s.id]||[], miss=null;
+    dd.forEach(function(d){ var v=IV.deep[d.k]; if(!v||v.pick===null||v.pick===undefined){ var bx=document.querySelector('.deep[data-k="'+d.k+'"]'); if(bx){bx.classList.add('need'); if(!miss)miss=bx;} } });
+    if(miss){ showErr('아래 「확인 질문」에도 답해 주세요. 이번 테스트에서 가장 중요한 부분입니다.'); miss.scrollIntoView({block:'center',behavior:'smooth'}); return false; } }
   return true;
 }
 function goNext(){
